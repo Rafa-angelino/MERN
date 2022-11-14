@@ -8,7 +8,7 @@ import Card from "../../shared/components/UIElements/Card";
 const UserItem = ({ id, image, name, placeCount }) => {
   return (
     <li className="user-item">
-      <Card className="user-item__content">
+      <Card className='user-item__content'>
         <Link to={`/${id}/places`}>
           <div className="user-item__image">
             <Avatar image={image} alt={name} />

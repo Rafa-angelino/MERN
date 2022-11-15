@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Users from "./user/pages/Users";
 import MainNavigation from "./shared/components/Navigation/MainNavigation";
+import Userplaces from "./places/pages/Userplaces";
 import NewPlace from "./places/pages/NewPlace";
 
 const App = () => {
@@ -13,6 +14,7 @@ const App = () => {
       <main>
         <Routes>
           <Route path="/" element={<Users />} exact />
+          <Route path="/:userId/places" element={<Userplaces />} exact/>
           <Route path="/places/new" element={<NewPlace />} exact />
         </Routes>
       </main>

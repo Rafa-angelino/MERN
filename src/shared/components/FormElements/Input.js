@@ -29,13 +29,15 @@ const Input = ({
   rows,
   validators,
   errorText,
-  onInput
+  onInput,
+  initialValue,
+  initialValid
 }) => {
 
   const [inputState, dispatch] = useReducer(inputReducer, {
-    value: "",
+    value: initialValue || "",
     isTouched: false,
-    isValid: false,
+    isValid: initialValid || false,
   });
 
   const { value, isValid } = inputState

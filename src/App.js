@@ -40,8 +40,8 @@ const App = () => {
     routes = (
       <Routes>
         <Route path="/auth" element={<Auth />} />
-        <Route path="/:userId/places" element={<Userplaces />} />
-        <Route path="*" element={<Navigate to="/auth" />} />
+        <Route path="/" element={<Users />} />
+        <Route path="/*" element={<Navigate to="/auth" />} />
       </Routes>
     );
   }

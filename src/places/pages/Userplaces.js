@@ -19,10 +19,18 @@ const Userplaces = () => {
           `http://localhost:5000/api/places/users/${userId}`
         );
         setLoadedPlaces(responseData.places);
-      } catch (err) {console.log(err)}
+      } catch (err) {
+        console.log(err);
+      }
     };
     fetchPlaces();
   }, [sendRequest, userId]);
+
+  const placeDeletedHandler = (deletedPlaceId) => {
+    setLoadedPlaces((prevPlaces) =>
+      prevPlaces.filter((place) => place.id !== deletedPlaceId)
+    );
+  };
 
   return (
     <>
@@ -32,7 +40,9 @@ const Userplaces = () => {
           <LoadingSpinner />
         </div>
       )}
-      {!isLoading && loadedPlaces && <PlaceList items={loadedPlaces} />}
+      {!isLoading && loadedPlaces && (
+        <PlaceList items={loadedPlaces} onDeletePlace={placeDeletedHandler} />
+      )}
     </>
   );
 };

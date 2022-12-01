@@ -13,6 +13,7 @@ import {
   VALIDATOR_MINLENGTH,
   VALIDATOR_REQUIRE,
 } from "../../shared/util/validators";
+import ImageUpload from "../../shared/components/FormElements/ImageUpload";
 
 import { useForm } from "../../shared/hooks/form-hook";
 import { AuthContext } from "../../shared/context/auth-context";
@@ -41,6 +42,7 @@ const Auth = () => {
         {
           ...formState.inputs,
           name: undefined,
+          image: undefined,
         },
         formState.inputs.email.isValid && formState.inputs.password.isValid
       );
@@ -52,6 +54,10 @@ const Auth = () => {
             value: "",
             isValid: false,
           },
+          image: {
+            value: null,
+            isValid: false,
+          },
         },
         false
       );
@@ -61,6 +67,7 @@ const Auth = () => {
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
+    console.log(formState.inputs);
 
     if (isLogin) {
       try {
@@ -71,23 +78,23 @@ const Auth = () => {
             email: formState.inputs.email.value,
             password: formState.inputs.password.value,
           }),
-          { "Content-type": "application/json" }
+          {
+            "Content-Type": "application/json",
+          }
         );
         auth.login(responseData.user.id);
       } catch (err) {}
     } else {
       try {
+        const formData = new FormData();
+        formData.append("email", formState.inputs.email.value);
+        formData.append("name", formState.inputs.name.value);
+        formData.append("password", formState.inputs.password.value);
+        formData.append("image", formState.inputs.image.value);
         const responseData = await sendRequest(
           "http://localhost:5000/api/users/signup",
           "POST",
-          JSON.stringify({
-            name: formState.inputs.name.value,
-            email: formState.inputs.email.value,
-            password: formState.inputs.password.value,
-          }),
-          {
-            "Content-type": "application/json",
-          }
+          formData
         );
 
         auth.login(responseData.user.id);
@@ -113,6 +120,8 @@ const Auth = () => {
               onInput={inputHandler}
             />
           )}
+
+          {!isLogin && <ImageUpload onInput={inputHandler} center id="image" />}
           <Input
             id="email"
             element="input"

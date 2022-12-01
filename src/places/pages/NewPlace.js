@@ -10,6 +10,7 @@ import {
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import "./NewPlace.css";
+import ImageUpload from "../../shared/components/FormElements/ImageUpload";
 import Button from "../../shared/components/FormElements/Button";
 import { useForm } from "../../shared/hooks/form-hook";
 import { AuthContext } from "../../shared/context/auth-context";
@@ -31,32 +32,33 @@ const NewPlace = () => {
         value: "",
         isValid: false,
       },
+      image: {
+        value: null,
+        isValid: false,
+      },
     },
     false
   );
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const placeSubmitHandler = async (e) => {
     e.preventDefault();
     try {
-      await sendRequest(
-        "http://localhost:5000/api/places",
-        "POST",
-        JSON.stringify({
-          title: formState.inputs.title.value,
-          description: formState.inputs.description.value,
-          address: formState.inputs.address.value,
-          creator: auth.userId,
-        }), 
-        { 'Content-Type' : 'application/json' }
-      );
-      navigate('/')
+      const formData = new FormData();
+      formData.append("title", formState.inputs.title.value);
+      formData.append("description", formState.inputs.description.value);
+      formData.append("address", formState.inputs.address.value);
+      formData.append("creator", auth.userId);
+      formData.append("image", formState.inputs.image.value);
+
+      await sendRequest("http://localhost:5000/api/places", "POST", formData);
+      navigate("/");
     } catch (error) {}
   };
 
   return (
     <>
-      <ErrorModal error={error} onClear={clearError}/>
+      <ErrorModal error={error} onClear={clearError} />
       <form className="place-form" onSubmit={placeSubmitHandler}>
         {isLoading && <LoadingSpinner asOverlay />}
         <Input
@@ -76,6 +78,7 @@ const NewPlace = () => {
           errorText="Coloque uma descrição válida (pelo menos 5 caracteres)"
           onInput={inputHandler}
         />
+
         <Input
           id="address"
           element="input"
@@ -84,6 +87,8 @@ const NewPlace = () => {
           errorText="Coloque um valor válido de endereço"
           onInput={inputHandler}
         />
+        <ImageUpload onInput={inputHandler} id="image" />
+
         <Button type="submit" disabled={!formState.isValid}>
           Adicionar lugar
         </Button>

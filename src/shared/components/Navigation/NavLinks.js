@@ -9,7 +9,7 @@ const NavLinks = () => {
   return (
     <ul className="nav-links">
       <li>
-        <NavLink to="/" exact>
+        <NavLink to="/" >
           Todos usuários
         </NavLink>
       </li>

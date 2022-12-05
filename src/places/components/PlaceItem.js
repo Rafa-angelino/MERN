@@ -17,7 +17,7 @@ const PlaceItem = ({
   address,
   creatorId,
   coordinates,
-  onDelete
+  onDelete,
 }) => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const auth = useContext(AuthContext);
@@ -39,14 +39,21 @@ const PlaceItem = ({
   const confirmDeleteHandler = async () => {
     setShowConfirmModal(false);
     try {
-      await sendRequest(`http://localhost:5000/api/places/${id}`, "DELETE");
-      onDelete(id)
+      await sendRequest(
+        `http://localhost:5000/api/places/${id}`,
+        "DELETE",
+        null,
+        {
+          Authorization: "Bearer " + auth.token,
+        }
+      );
+      onDelete(id);
     } catch (err) {}
   };
 
   return (
     <>
-      <ErrorModal error={error} onClear={clearError} /> 
+      <ErrorModal error={error} onClear={clearError} />
       <Modal
         show={showMap}
         onCancel={closeMapHandler}
@@ -81,7 +88,7 @@ const PlaceItem = ({
       </Modal>
       <li className="place-item">
         <Card className="place-item__content">
-          {isLoading && <LoadingSpinner asOverlay/>}
+          {isLoading && <LoadingSpinner asOverlay />}
           <div className="place-item__image">
             <img src={`http://localhost:5000/${image}`} alt={title} />
           </div>
@@ -94,7 +101,9 @@ const PlaceItem = ({
             <Button inverse onClick={openMapHandler}>
               OLHAR NO MAPA
             </Button>
-            {auth.userId === creatorId && <Button to={`/places/${id}`}>EDITAR</Button>}
+            {auth.userId === creatorId && (
+              <Button to={`/places/${id}`}>EDITAR</Button>
+            )}
             {auth.userId === creatorId && (
               <Button danger onClick={showDeleteWarningHandler}>
                 DELETAR
